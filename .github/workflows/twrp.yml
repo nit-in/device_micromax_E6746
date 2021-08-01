@@ -57,7 +57,6 @@ jobs:
           echo "add_lunch_combo omni_E6746-eng" > /home/runner/twrp/device/micromax/E6746/vendorsetup.sh
           source build/envsetup.sh
           lunch omni_E6746-eng
-          sed -i 's/rsync -a/rsync -a --force/g' /home/runner/twrp/build/make/core/Makefile
           mka adbd recoveryimage ALLOW_MISSING_DEPENDENCIES=true
 
       - name: Create Release
