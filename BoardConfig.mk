@@ -68,6 +68,8 @@ BOARD_MAIN_PARTITION_LIST := \
      system \
      vendor
 
+BOARD_USES_PRODUCTIMAGE := true
+
 # System as root
 BOARD_SUPPRESS_SECURE_ERASE := true
 
