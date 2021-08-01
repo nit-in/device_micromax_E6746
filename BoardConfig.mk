@@ -69,6 +69,7 @@ BOARD_MAIN_PARTITION_LIST := \
      vendor
 
 BOARD_USES_PRODUCTIMAGE := true
+TARGET_COPY_OUT_PRODUCT := product
 
 # System as root
 BOARD_SUPPRESS_SECURE_ERASE := true
