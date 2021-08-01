@@ -1,0 +1,5 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<manifest>
+	<remote  name="GH" fetch="https://github.com/" />
+	<project path="device/micromax/E6746" name="nit-in/device_micromax_E6746" remote="GH" revision="pbrp-10" />
+</manifest>

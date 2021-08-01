@@ -1,0 +1,68 @@
+name: TWRP_MINIMAL
+
+on:
+  push:
+    tags:
+      - 'TWRP-v*'
+
+  workflow_dispatch:
+
+jobs:
+
+  twrp:
+    runs-on: ubuntu-latest
+
+    env:
+      E6746_OUT_DIR: /home/runner/twrp/out/target/product/E6746
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v2
+      - name: Clean up
+        uses: rokibhasansagar/slimhub_actions@main
+
+      - name: setting_up
+        env:
+          ACTIONS_ALLOW_UNSECURE_COMMANDS: 'true'
+        run:  |
+          mkdir -p /home/runner/bin
+          mkdir -p /home/runner/twrp
+          sudo apt update
+          sudo apt install -y python2 virtualenv bc bison build-essential ccache curl flex g++-multilib gcc-multilib git gnupg gperf imagemagick lib32ncurses5-dev lib32readline-dev lib32z1-dev liblz4-tool libncurses5 libncurses5-dev libsdl1.2-dev libssl-dev libxml2 libxml2-utils lzop pngcrush rsync schedtool squashfs-tools xsltproc zip zlib1g-dev libwxgtk3.0-gtk3-dev
+          virtualenv --python=$(which python2) venv
+          source venv/bin/activate
+
+      - name: installing repo and initialize it
+        env:
+          ACTIONS_ALLOW_UNSECURE_COMMANDS: 'true'
+        run:  |
+          curl https://storage.googleapis.com/git-repo-downloads/repo > /home/runner/bin/repo
+          if [ -d "$HOME/bin" ] ; then
+            PATH="$HOME/bin:$PATH"
+          fi
+          chmod a+x /home/runner/bin/repo
+          source /home/runner/.profile            
+          cd /home/runner/twrp
+          repo init --depth=1 --no-clone-bundle -u git://github.com/minimal-manifest-twrp/platform_manifest_twrp_omni.git -b twrp-10.0
+          mkdir -p /home/runner/twrp/.repo/local_manifests
+          mv /home/runner/work/device_micromax_E6746/device_micromax_E6746/roomservice.xml /home/runner/twrp/.repo/local_manifests/roomservice.xml
+          repo sync -j16 --no-tags --no-clone-bundle --force-sync --optimized-fetch
+
+      - name: build recovery
+        env:
+          ACTIONS_ALLOW_UNSECURE_COMMANDS: 'true'
+        run:  |
+          cd /home/runner/twrp
+          touch /home/runner/twrp/device/micromax/E6746/vendorsetup.sh
+          echo "add_lunch_combo omni_E6746-eng" > /home/runner/twrp/device/micromax/E6746/vendorsetup.sh
+          source build/envsetup.sh
+          lunch omni_E6746-eng
+          sed -i 's/rsync -a/rsync -a --force/g' /home/runner/twrp/build/make/core/Makefile
+          mka adbd recoveryimage ALLOW_MISSING_DEPENDENCIES=true
+
+      - name: Create Release
+        uses: ncipollo/release-action@v1
+        with:
+          artifacts: "${{ env.E6746_OUT_DIR }}/recovery.img, ${{ env.E6746_OUT_DIR }}/*.zip"
+          token: ${{ secrets.RECOVERY }}
+
