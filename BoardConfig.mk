@@ -108,6 +108,9 @@ TW_EXCLUDE_TWRPAPP := true
 # Hack: prevent anti rollback
 PLATFORM_SECURITY_PATCH := 2099-12-31
 VENDOR_SECURITY_PATCH := 2099-12-31
+TARGET_COPY_OUT_PRODUCT := product
+
+
 
 # Additional binaries & libraries needed for recovery
 TARGET_RECOVERY_DEVICE_MODULES += \
