@@ -58,8 +58,8 @@ jobs:
           ACTIONS_ALLOW_UNSECURE_COMMANDS: 'true'
         run:  |
           cd /home/runner/ofox
-          touch /home/runner/pbrp/device/micromax/E6746/vendorsetup.sh
-          echo "add_lunch_combo omni_E6746-eng" > /home/runner/pbrp/device/micromax/E6746/vendorsetup.sh
+          touch /home/runner/ofox/device/micromax/E6746/vendorsetup.sh
+          echo "add_lunch_combo omni_E6746-eng" > /home/runner/ofox/device/micromax/E6746/vendorsetup.sh
           source /home/runner/venv/bin/activate
           python --version
           source build/envsetup.sh
