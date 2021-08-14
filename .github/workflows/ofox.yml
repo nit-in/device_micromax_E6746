@@ -29,7 +29,9 @@ jobs:
           mkdir -p /home/runner/ofox
           mkdir -p /home/runner/ofox-scripts
           mkdir -p /home/runner/ofox/device/micromax
+          mkdir -p /home/runner/venv
           sudo apt update
+          sudo apt install python3 python2 virtualenv
           cd /home/runner/ofox-scripts
           sudo apt install git aria2 -y
           git clone https://gitlab.com/OrangeFox/misc/scripts
@@ -37,8 +39,7 @@ jobs:
           sudo bash setup/android_build_env.sh
           sudo bash setup/install_android_sdk.sh
           cd /home/runner
-          virtualenv --python=$(which python2) venv
-          source venv/bin/activate
+          virtualenv --python=$(which python2) /home/runner/venv
 
       - name: downloading sources and setting up device tree
         env:
@@ -56,6 +57,8 @@ jobs:
           cd /home/runner/ofox
           touch /home/runner/pbrp/device/micromax/E6746/vendorsetup.sh
           echo "add_lunch_combo omni_E6746-eng" > /home/runner/pbrp/device/micromax/E6746/vendorsetup.sh
+          source /home/runner/venv/bin/activate
+          python --version
           source build/envsetup.sh
           lunch omni_E6746-eng
           mka adbd recoveryimage ALLOW_MISSING_DEPENDENCIES=true FOX_USE_TWRP_RECOVERY_IMAGE_BUILDER=1 LC_ALL="C"
